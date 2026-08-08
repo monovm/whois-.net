@@ -8,7 +8,7 @@ using MonoVM.Whois.Model;
 
 namespace MonoVM.Whois.Compatibility;
 
-/// <summary>Options accepted by <see cref="Checker"/>, mirroring the PHP package's options array.</summary>
+/// <summary>Options accepted by <see cref="Checker"/>.</summary>
 public sealed class CheckerOptions
 {
     /// <summary>Suffixes tried when a domain is given without one.</summary>
@@ -29,19 +29,17 @@ public sealed class CheckerOptions
 }
 
 /// <summary>
-/// The bulk availability check in the shape the <c>monovm/whois-php</c> package exposes it.
+/// The bulk availability check behind one static call, for scripts and quick checks.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Here to make a port from PHP a search-and-replace rather than a rewrite: same method name, same
-/// arguments, same dictionary of lower-case status strings. New code should prefer
-/// <see cref="IWhoisClient"/>, which is async, cancellable, and says what went wrong when
-/// something did.
+/// One call, no client to construct, and a dictionary of lower-case status strings back. New code
+/// should prefer <see cref="IWhoisClient"/>, which is async, cancellable, and says what went wrong
+/// when something did.
 /// </para>
 /// <para>
-/// One deliberate difference in behaviour: a lookup that fails reports <c>error</c>, where the PHP
-/// original can report <c>available</c>. A rate-limited server has told you nothing about the
-/// domain.
+/// A lookup that fails reports <c>error</c>, never <c>available</c>: a rate-limited server has
+/// told you nothing about the domain.
 /// </para>
 /// </remarks>
 public static class Checker

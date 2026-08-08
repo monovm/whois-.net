@@ -8,19 +8,19 @@ using MonoVM.Whois.Model;
 namespace MonoVM.Whois.Compatibility;
 
 /// <summary>
-/// The single-domain handler in the shape the <c>monovm/whois-php</c> package exposes it.
+/// A single-domain lookup behind one static call, for scripts and quick checks.
 /// </summary>
 /// <remarks>
 /// <para>
-/// A thin wrapper over <see cref="WhoisLookupResult"/> with the PHP method names, for code being
-/// moved across. New code should use <see cref="WhoisClient.LookupAsync(string, CancellationToken)"/>,
+/// A thin wrapper over <see cref="WhoisLookupResult"/>. New code should use
+/// <see cref="WhoisClient.LookupAsync(string, CancellationToken)"/>,
 /// which returns the same information plus the parsed record and the reasoning behind the verdict.
 /// </para>
 /// <para>
-/// Two deliberate differences from the PHP original, both in the same direction:
+/// Two behaviours worth knowing, both in the same safe direction:
 /// </para>
 /// <list type="bullet">
-///   <item><description>a premium or reserved name reports <see cref="IsPremium"/>, and <see cref="IsAvailable"/> is false — PHP re-analyses the "No WHOIS information available." placeholder there and returns true;</description></item>
+///   <item><description>a premium or reserved name reports <see cref="IsPremium"/>, and <see cref="IsAvailable"/> is false;</description></item>
 ///   <item><description>a server that refuses to answer reports <see cref="IsValid"/> false rather than an availability verdict.</description></item>
 /// </list>
 /// </remarks>
@@ -89,7 +89,7 @@ public sealed class WhoisHandler
     /// <summary>The registry's reply verbatim, or the message when there was no reply.</summary>
     public string GetRawWhoisMessage() => Result.RawText ?? Result.Message;
 
-    /// <summary>The status as the PHP package words it: <c>available</c>, <c>unavailable</c>, and so on.</summary>
+    /// <summary>The status as a lower-case string: <c>available</c>, <c>unavailable</c>, and so on.</summary>
     public string GetStatus() => Result.Status.ToWireString();
 
     /// <inheritdoc />

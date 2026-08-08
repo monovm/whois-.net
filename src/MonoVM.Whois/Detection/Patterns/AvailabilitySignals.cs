@@ -20,8 +20,8 @@ internal static class AvailabilitySignals
     /// registry's legal preamble cannot supply the words that decide the verdict.
     /// </summary>
     /// <remarks>
-    /// The bare word "free" is deliberately absent, though the PHP original lists it: it turns any
-    /// registrar footer offering a free service into a false "available".
+    /// The bare word "free" is deliberately absent: it turns any registrar footer offering a free
+    /// service into a false "available".
     /// </remarks>
     public static readonly string[] Keywords =
     {

@@ -47,10 +47,9 @@ internal static class PatternCatalog
     /// Compiles a pattern that must appear at the very start of the reply.
     /// </summary>
     /// <remarks>
-    /// The PHP original expressed this by prepending the sentinel <c>" ---"</c> to every response
-    /// and then matching literals such as <c>---not found</c>. That sentinel also made the first
-    /// real line of every reply look like a comment to the banner filter. Anchoring says the same
-    /// thing without corrupting the text being examined.
+    /// Anchoring expresses "this wording opens the reply" without mutating the text being
+    /// examined — an alternative would be prepending a sentinel to every response, which corrupts
+    /// the first real line for every later consumer of the text.
     /// </remarks>
     public static Regex Anchored(string pattern) => Compile(@"\A[\s\-]*(?:" + pattern + ")");
 

@@ -33,8 +33,8 @@ public enum DomainAvailabilityStatus
 public static class DomainAvailabilityStatusExtensions
 {
     /// <summary>
-    /// Renders the status using the same lower-case wording as the <c>monovm/whois-php</c> package,
-    /// so results can be handed to code written against that API.
+    /// Renders the status as its lower-case wire wording: <c>available</c>, <c>unavailable</c>,
+    /// <c>premium</c>, <c>invalid</c>, <c>error</c> or <c>unknown</c>.
     /// </summary>
     public static string ToWireString(this DomainAvailabilityStatus status) => status switch
     {

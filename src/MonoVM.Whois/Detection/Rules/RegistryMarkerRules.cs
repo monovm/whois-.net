@@ -22,8 +22,8 @@ public sealed class RegistryAvailableMarkerRule : AvailabilityRule
     {
         var marker = context.Server?.AvailableMatch;
 
-        // An empty marker matches every reply. PHP's strpos() returns 0 for an empty needle, which
-        // is not false, which is how a package can end up calling every domain available.
+        // A naive substring test treats an empty marker as present in every reply, which would
+        // call every domain available. An empty marker must match nothing.
         if (string.IsNullOrEmpty(marker))
         {
             return AvailabilityRuleResult.Continue;

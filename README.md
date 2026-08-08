@@ -6,9 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A .NET library for retrieving domain registration data and checking whether a name can be
-registered, over WHOIS (port 43) and RDAP. It is a ground-up rewrite of
-[`monovm/whois-php`](https://github.com/monovm/whois-php): same server table and the same hard-won
-detection knowledge, rebuilt around interfaces, async, and a rule chain you can extend.
+registered, over WHOIS (port 43) and RDAP. Built around interfaces, async, a curated server table
+for 870+ suffixes, and a detection rule chain you can extend.
 
 ```csharp
 using MonoVM.Whois;
@@ -38,7 +37,7 @@ Console.WriteLine(result.Verdict?.Reason);        // why it decided that
 - [Command line tool](#command-line-tool)
 - [Internationalised domains](#internationalised-domains)
 - [Server table](#server-table)
-- [Migrating from the PHP package](#migrating-from-the-php-package)
+- [Static convenience API](#static-convenience-api)
 - [Testing](#testing)
 - [License](#license)
 
@@ -300,10 +299,10 @@ using var client = WhoisClient.CreateBuilder()
 | `DefinitionsFilePath` | – | JSON merged over the bundled table. |
 | `UseBundledDefinitions` | `true` | Whether to load the bundled table at all. |
 
-> **On TLS.** The PHP client disables certificate verification outright, because a few registry
-> RDAP endpoints still serve incomplete chains. Silently accepting any certificate is not a default
-> this library will ship. If you need it for a specific registry, turn it off deliberately with
-> `WithTlsValidation(false)` — and turn it back on when they fix their chain.
+> **On TLS.** A few registry RDAP endpoints still serve incomplete certificate chains, which
+> tempts a client into skipping verification altogether. Silently accepting any certificate is not
+> a default this library will ship. If you need it for a specific registry, turn it off
+> deliberately with `WithTlsValidation(false)` — and turn it back on when they fix their chain.
 
 ---
 
@@ -475,9 +474,10 @@ which is the truth, and better than an answer that is confidently wrong.
 
 ---
 
-## Migrating from the PHP package
+## Static convenience API
 
-`MonoVM.Whois.Compatibility` mirrors the PHP API so a port is mostly mechanical:
+`MonoVM.Whois.Compatibility` offers a minimal static surface for scripts and quick checks — one
+call, no client to construct, lower-case status strings:
 
 ```csharp
 using MonoVM.Whois.Compatibility;
@@ -495,26 +495,26 @@ handler.GetWhoisMessage();
 
 New code should use `IWhoisClient` — async, cancellable, and it tells you what went wrong.
 
-### Deliberate differences in behaviour
+### Design decisions worth knowing
 
-| | PHP | Here |
-|---|---|---|
-| Rate-limited, blocked, or retired endpoint | reported as `available` | `error` |
-| RDAP 403 / 5xx | reply body classified as text | `error`; only 404 is a verdict |
-| Empty reply | `available` | `error`, unless the suffix opted in |
-| IP-registry banner on a mismatched suffix | `available` | `error` |
-| Premium / reserved name | `isAvailable() === true` | `IsPremium()`, and `IsAvailable()` is false |
-| Junk input | `available` | `invalid` |
-| Empty `available` marker in the table | matches every reply | ignored |
-| `status.....: Registered` (padded keys) | missed | recognised |
-| DENIC `Status: invalid` | read as available | registered |
-| Suffix matching | split at the first dot | longest known suffix, subdomains stripped |
-| IDNs | passed through as typed | punycode on the wire, per-registry exceptions |
-| Bare `404` anywhere in a reply | read as available | only a real RDAP 404 counts |
-| Detection patterns | rebuilt per call | compiled once per process |
+Every one of these is in the same direction: this library would rather say "I could not tell" than
+"it's free".
 
-Everything in that table is in the same direction: this library would rather say "I could not tell"
-than "it's free".
+| Situation | Verdict here |
+|---|---|
+| Rate-limited, blocked, or retired endpoint | `error`, never `available` |
+| RDAP 403 / 5xx | `error`; only a genuine 404 is a verdict |
+| Empty reply | `error`, unless the suffix opted in via `available_when_empty` |
+| IP-registry banner on a mismatched suffix | `error` |
+| Premium / reserved name | `IsPremium()`, and `IsAvailable()` is false |
+| Junk input | `invalid` |
+| Empty `available` marker in the table | ignored, matches nothing |
+| `status.....: Registered` (padded keys) | recognised |
+| DENIC `Status: invalid` | registered |
+| Suffix matching | longest known suffix wins, subdomains stripped |
+| IDNs | punycode on the wire, per-registry exceptions |
+| Bare `404` in the middle of a reply | not a verdict; only a real RDAP 404 counts |
+| Detection patterns | compiled once per process |
 
 ---
 

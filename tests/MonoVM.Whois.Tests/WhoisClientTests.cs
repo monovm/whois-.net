@@ -279,7 +279,7 @@ public class StatusWireFormatTests
     [InlineData(DomainAvailabilityStatus.Invalid, "invalid")]
     [InlineData(DomainAvailabilityStatus.Error, "error")]
     [InlineData(DomainAvailabilityStatus.Unknown, "unknown")]
-    public void Matches_the_php_packages_wording(DomainAvailabilityStatus status, string expected)
+    public void Matches_the_documented_wire_wording(DomainAvailabilityStatus status, string expected)
     {
         Assert.Equal(expected, status.ToWireString());
     }

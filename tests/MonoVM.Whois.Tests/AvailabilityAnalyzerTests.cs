@@ -163,8 +163,8 @@ public class AvailabilityAnalyzerTests
     [Fact]
     public void An_empty_available_marker_does_not_match_everything()
     {
-        // PHP's strpos() returns 0 for an empty needle, which is not false, which is how a package
-        // ends up reporting every domain as available.
+        // A naive substring test finds an empty needle in every reply, which is how a client can
+        // end up reporting every domain as available.
         var server = WhoisServerDefinition.Create(".example", "socket://whois.example.test", available: "");
 
         Assert.Equal(DomainAvailabilityStatus.Registered, Analyze(Fixtures.ComRecord, ".example", server));

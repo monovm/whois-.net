@@ -33,9 +33,10 @@ public sealed class WhoisOptions
     /// Whether to verify TLS certificates on RDAP requests. Default: <see langword="true"/>.
     /// </summary>
     /// <remarks>
-    /// The PHP client disables verification outright because a handful of registry endpoints still
-    /// serve incomplete chains. Silently accepting any certificate is not a default this library is
-    /// willing to ship; turn it off deliberately, for the registries that need it, if you must.
+    /// A handful of registry endpoints still serve incomplete certificate chains, which tempts a
+    /// client into skipping verification. Silently accepting any certificate is not a default this
+    /// library is willing to ship; turn it off deliberately, for the registries that need it, if
+    /// you must.
     /// </remarks>
     public bool ValidateTlsCertificates { get; set; } = true;
 

@@ -13,9 +13,6 @@ namespace MonoVM.Whois.Detection.Patterns;
 /// domain — so an implementation that only looks for records will report every domain behind a
 /// rate limiter as free to register. That is the failure mode this table exists to prevent.
 /// </para>
-/// <para>
-/// None of this is in the PHP original.
-/// </para>
 /// </remarks>
 internal static class RefusalSignals
 {
