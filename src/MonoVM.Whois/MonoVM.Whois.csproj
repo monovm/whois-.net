@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0;net8.0;netstandard2.0</TargetFrameworks>
+    <RootNamespace>MonoVM.Whois</RootNamespace>
+    <AssemblyName>MonoVM.Whois</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>MonoVM.Whois</PackageId>
+    <Title>MonoVM.Whois — domain WHOIS and RDAP lookups for .NET</Title>
+    <Description>Domain WHOIS (port 43) and RDAP lookups with accurate availability detection, strongly typed record parsing and 870+ bundled TLD servers. Async, dependency-injection friendly, no false "available" verdicts.</Description>
+    <PackageTags>whois;rdap;domain;dns;tld;availability;registrar;domain-availability;monovm</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See CHANGELOG.md</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <EmbeddedResource Include="Data\whois-servers.json" LogicalName="MonoVM.Whois.Data.whois-servers.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MonoVM.Whois.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MonoVM.Whois.Cli</RootNamespace>
+    <AssemblyName>whois</AssemblyName>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>monovm-whois</ToolCommandName>
+    <PackageId>MonoVM.Whois.Cli</PackageId>
+    <Title>MonoVM.Whois command line tool</Title>
+    <Description>Command line domain WHOIS/RDAP lookup and availability checker, powered by MonoVM.Whois.</Description>
+    <PackageTags>whois;rdap;domain;cli;dotnet-tool;monovm</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <ProjectReference Include="..\MonoVM.Whois\MonoVM.Whois.csproj" />
+  </ItemGroup>
+
+</Project>
